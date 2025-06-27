@@ -1,0 +1,404 @@
+5סך
+Structured Query Language
+Version 1.2
+Copyright © 2001
+Relational Systems Corporation
+3646 Townline Road
+Omer, Michigan 48749
+Phone 989-653-3114 Fax 989-653-3115
+Table of Contents
+ 1 INTRODUCTION 6 MULTI-TABLE QUERIES
+Course Objectives 3 Joins 55
+What is a Relational Database? 4 Table Aliases 59
+What is SQL? 5 Unions 61
+2 BASIC QUERIES 7 QUERIES WITHIN QUERIES
+Selecting All Columns & Rows 9 Single-Valued Subqueries 64
+Selecting Specific Columns 11 Multi-Valued Subqueries 66
+Selecting Specific Rows 13 Correlated Subqueries 68
+Sorting Rows 17
+Eliminating Duplicate Rows 20 8 MAINTAINING TABLES
+Inserting Rows 71
+3 ADVANCED OPERATORS Updating Rows 73
+The LIKE Operator 23 Deleting Rows 75
+The AND Operator 25 Transactions 77
+The BETWEEN Operator 27
+The OR Operator 29 9 DEFINING DATABASE OBJECTS
+The IN Operator 31 Defining Tables 80
+The IS NULL Operator 33 Loading Tables 82
+Precedence and Negation 35 Integrity Constraints 84
+Defining Indices 88
+4 EXPRESSIONS Defining Views 90
+Arithmetic Expressions 38
+Expressions in Other Clauses 41 A APPENDICES
+Column Aliases 43 The Exercise Database 93
+Answers to Exercises 94
+5 FUNCTIONS Syntax Summary 111
+Statistical Functions 46 A Brief Critique 116
+Grouping 49 Recommended Reading 117
+Functions in Other Clauses 51 Index 118
+1
+1
+INTRODUCTION
+Course Objectives
+What is a Relational Database?
+What is SQL?
+2
+Course Objectives
+When you finish this course, you will know what a relational database is, know what
+SQL is, and know what you can do to the former with the latter. You will also know
+why SQL is an important relational database language, and will actually be able to...
+QUERY RELATIONAL
+DATABASE
+MAINTAIN
+DEFINE
+Query a relational database
+The full range of SQL's query capabilities are explored in this course. Ample
+exercises, with answers, are provided for each topic. By the time you're done, you will
+be able to get information out of a relational database using SQL.
+Maintain a relational database
+You will also be able to put information into a relational database via SQL. You will
+learn how to insert new data, update existing data, and delete obsolete data. You will
+also understand how databases work in multi-user environments.
+Define a relational database
+Finally, you will know enough to actually create database objects with SQL, including,
+tables, constraints, indices, and views. Database design, however, which is covered
+in our other course offerings, is not addressed in this course.
+3
+What is a Relational Database?
+A relational database is a collection of data stored in tables. Each table consists of
+one or more vertical columns, and zero or more horizontal rows. Pictured below are
+two tables from our exercise database, with three rows of sample data in each.
+PERSONS
+PERSON NAME BDATE GENDER COUNTRY JOB
+1 Einstein 1879-03-20 Male Germany S
+2 Dickens 1812-07-22 Male England W
+3 Dickinson 1830-07-15 Female USA W
+COUNTRIES
+COUNTRY POP AREA GNP LANGUAGE LITERACY
+Germany 81337541 137823 1331000 German 100
+USA 263814032 3679192 6380000 English 95
+England 58295119 94251 980200 English 99
+Tables are identified by name
+Table names must be unique within a database. Typical SQL databases allow up to
+18 characters in a table name. The first character must be a letter, while the
+remaining characters can be letters, numbers, or underscores.
+Columns are identified by name
+Column names are unique within each table, but the same column name can
+appear in different tables. Both tables above, for example, have COUNTRY columns.
+Rows are identified by their contents
+The rows of a table do not have names, nor is their position in a table fixed.
+Therefore, we refer to the rows of tables by describing the data values they contain:
+'Person number 2,' for instance, or 'All English-speaking countries.'
+4
+What is SQL?
+SQL is the most popular of all database languages. The name is an acronym for
+Structured Query Language, though SQL is much more than just a query language.
+Some pronounce the name as three separate letters, S-Q-L, but most say, 'sequel.'
+STRUCTURED
+QUERY
+LANGUAGE
+Developed by IBM
+Originally developed in 1974 by D. D. Chamberlin and others at IBM's San Jose
+Research Laboratory, SQL was finally released to the public as an integral part of
+IBM's SQL/DS and DB2 database products in 1982-1983.
+Accepted by the world
+SQL was adopted as an official standard by the American National Standards
+Institute (ANSI) in 1986, and in 1987 by the International Organization for
+Standardization (ISO). It is currently available in over 100 commercial products.
+Implemented in many different ways
+In spite of its popularity and its acceptance as an official standard, the SQL language
+is rather poorly defined and suffers from a number of internal inconsistencies. The
+result is a variety of SQL 'dialects' that differ slightly, but annoyingly, one from another.
+5
+What is SQL? continued
+The
+It
+ basic SQL language is actually quite small, and relatively easy to learn and use.
+consists of six basic statement types (select, insert, update, delete, create, and
+drop) that can be conveniently grouped into the three categories shown below.
+SQL STATEMENTS BY CATEGORY
+CATEGORY STATEMENT PURPOSE
+Query SELECТ
+Maintenance INSERT
+UPDATE
+Display rows of one or more tables
+Add rows to a table
+Change rows in a table
+DELETE Remove rows from a table
+Definition CREATE Add tables, indices, views
+DROP Remove tables, indices, views
+Query statements
+The SELECT statement, which has many different forms, is used to formulate all
+queries. SELECT statements 'ask questions' whose answers may be found in, or
+derived from, one or more of the tables in a database.
+Maintenance statements
+The INSERT statement, which has two different forms, is used to add new rows to a
+table (one or more at a time). The UPDATE statement is used to modify existing
+rows, while the DELETE statement is used to remove obsolete rows.
+Definition statements
+The CREATE statement, which also has several different forms, is used to define
+new tables, indices, and views in a database. Various forms of the DROP statement
+are used to remove these components when they are no longer required.
+6
+What is SQL? continued
+A SQL statement is a collection of clauses, keywords, and parameters that perform a
+particular function. In the examples below, each clause is shown on a separate line;
+keywords appear in all uppercase letters, parameters in all lowercase letters.
+QUERY STMT
+SELECT columns
+FROM table
+WHERE comparisons
+MAINTENANCE STMT DEFINITION STMT
+DELETE
+FROM table
+WHERE comparisons
+CREATE
+INDEX index
+ON table (columns)
+Clauses
+The various clauses of SQL statements are named after their initial words: the
+SELECT clause, for example, or the FROM clause. SQL allows multiple clauses per
+line, but most SQL programmers use separate lines for clarity and ease of editing.
+Keywords
+SQL reserves a small number of words, called keywords, for specific purposes.
+Keywords can be entered in upper, lower, or mixed-case letters; they are shown here
+in all uppercase. Keywords may not be used as table or column names.
+Parameters
+Parameters are the 'variable' parts of each clause. When formulating a SQL
+statement, you insert the appropriate column names, table names, and other such
+values in place of the lowercase parameters shown above.
+7
+2
+BASIC QUERIES
+Selecting All Columns & Rows
+Selecting Specific Columns
+Selecting Specific Rows
+Sorting Rows
+Eliminating Duplicate Rows
+8
+Selecting All Columns & Rows
+The simplest kind of query displays all the columns and all the rows of a single
+table. An asterisk is entered in the SELECT clause (to indicate that all columns
+should be included), and the table name is specified in the FROM clause, like so:
+SQL STATEMENT JOB TITLE
+S Scientist
+SELECT *
+FROM JOBS
+E Entertainer
+W Writer
+Instructor
+SQL STATEMENT COUNTRY RELIGION PERCENT
+Germany Protestant 45
+SELECT*
+FROM RELIGIONS
+Germany Catholic 37
+England Catholic 30
+England Anglican 70
+All queries have SELECT and FROM clauses
+The FROM clause follows the SELECT clause
+The asterisk (* ) means 'all columns'
+The table name is specified in the FROM clause
+Columns and rows appear in arbitrary order
+9
+Selecting All Columns & Rows continued
+The general syntax of a SQL SELECT statement appears below. Keywords and
+examples are shown in uppercase letters, while parameters appear in lowercase.
+SYNTAX SUMMARY
+CLAUSE
+SELECT
+FROM
+PARAMETERS EXAMPLE
+*
+table JOBS
+Exercises
+1. Ask the instructor for a brief tutorial in the use of the classroom database.
+2. Select all the columns and all the rows of the PERSONS table.
+3. Explore the COUNTRIES table using a SELECT statement.
+4. Take a look at the ERRORS table.
+5. Inspect the ARMIES table.
+Extra Credit
+6. Most self-respecting databases have a table called SYSCOLUMNS. Take a peek.
+7. Choose any other table from the SYSCOLUMNS table and display it.
+10
+Selecting Specific Columns
+To select specific columns, we enter a list of columns in the SELECT statement
+(instead of an asterisk). Each column name is separated from the others by
+comma and optional spaces. The columns are displayed in the order listed.
+a
+SQL STATEMENT
+SELECT TITLE
+FROM JOBS
+TITLE
+Scientist
+Entertainer
+Writer
+Instructor
+SQL STATEMENT TITLE JOB
+Scientist S
+SELECT TITLE, JOВ Entertainer E
+FROM JOBS Writer W
+Instructor
+SQL STATEMENT JOB TITLE JOB
+S Scientist S
+SELECT *, JOB
+FROM JOBS
+E Entertainer E
+W Writer W
+Instructor
+Column names are listed in the SELECT clause
+Column names are separated by commas
+Columns appear in the order listed
+Rows appear in arbitrary order
+11
+Selecting Specific Columns continued
+The revised syntax of a SQL SELECT statement appears below. Note that it has
+been expanded to include the column list parameter in the SELECT clause.
+SYNTAX SUMMARY
+CLAUSE PARAMETERS EXAMPLE
+SELECT
+col list LANGUAGE, COUNTRY
+FROM table JOBS
+Exercises
+1. Select only the JOB column from the JOBS table.
+2. Show the NAME and BDATE columns from the PERSONS table.
+3. The RELIGIONS table contains three columns - COUNTRY, RELIGION, and
+PERCENT. Display all of these columns, but show them in reverse order.
+Extra Credit
+4. Show all the columns of the COUNTRIES table, but put the COUNTRY column on
+both ends (so we can line 'em up with a ruler). Do this first without using an
+asterisk, then do it again with one.
+12
+Selecting Specific Rows
+Rows in a table are identified by the values they contain. It is therefore important to
+understand the different categories of values that SQL supports, and the appropriate
+syntax for entering each kind of value in query statements.
+VALUE SUMMARY
+CATEGORY DESCRIPTION EXAMPLES
+NUMERIC positive values 3, +12
+negative values -7, -1024000
+decimal values 3.141519, -.96
+NONNUMERIC single words 'Chamberlin', 'SELEСТ multiple words
+single quotes
+DATE 'yyyy-mm-dd' format
+'We love SQL', 'The LORD is good to me'
+'10 O"Clock', 'I don"t know'
+'1996-01-01', '1996-12-31'
+Numeric values are entered in the normal way
+Numeric values are specified in queries as one or more of the following characters:
++-0123456789.
+The sign is optional, but must appear first. Only one decimal point is allowed. Note
+that commas, dollar signs, and percent signs are not allowed in numeric values.
+Non-numeric values are enclosed in quotes
+Non-numeric values, called strings, are entered inside of single quote marks. Use
+two consecutive single quote marks inside a string to representasingle quote.
+Date values are entered in 'yyyy-mm-dd' format
+While the SQL standard lacks a uniform representation of dates, the format shown
+above is supported in most SQL dialects. Dates must be enclosed in single quotes.
+13
+Selecting Specific Rows continued
+A comparison is a phrase that consists of a column name, a comparison operator,
+and a value. All comparisons yield a result of either true or false. Comparisons are
+used to specify which rows of a table should be included in the result of a query.
+COMPARISON OPERATORS
+OPERATOR MEANING
+=
+<>
+<
+<=
+>
+>=
+Equal to
+Not equal to
+Less than
+Less than or equal to
+Greater than
+Greater than or equal to
+EXAMPLE
+NAME= 'EINSTEIN'
+BDATE <> '1944-05-02'
+POP < 100000
+NAME<= 'O"Grady'
+AREA> 999
+BDATE >= '1962-06-19'
+A column name is specified on the left
+The column name can be entered in upper, lower, or mixed-case letters. In this text,
+columns names are shown in uppercase. Note that even though column names are
+non-numeric, they are not enclosed in quotes.
+Avalue is specified on the right
+Values must be entered appropriately for their value type - that is, numbers as they
+would normally be written, strings in single quotes, and dates in the 'yyyy-mm-dd'
+format. Values should be of the same type as columns to which they are compared.
+An operator is specified in the middle
+Comparison operators are placed between column names and values. Spaces on
+either side of a comparison operator are allowed, but are not required. However,
+spaces are not allowed between symbols in multiple symbol operators ( <>, <=, >= ).
+14
+Selecting Specific Rows continued
+Comparisons are specified in the WHERE clause of a SQL SELECT statement. The
+WHERE clause must immediately follow the FROM clause. The result table includes
+all the rows of the source table where the comparison is true.
+SQL STATEMENT COUNTRY AREA
+USA 3679192
+SELECTCOUNTRY, AREA Canada 3849674
+FROM COUNTRIES China 3696100
+WHERE AREA > 3000000 Brazil 3286500
+Russia 6592800
+SQL STATEMENT NAME COUNTRY
+Rand Russia
+SELECT NAME, COUNTRY
+FROM PERSONS
+WHERE COUNTRY = 'RUSSIA'
+Tolstoy Russia
+Chekhov Russia
+Babel Russia
+SQL STATEMENT NAME BDATE
+Dante 1265-03-21
+SELECT NAME, BDATE Shikabu 1000-09-03
+FROM PERSONS Augustino 0354-04-30
+WHERE BDATE <'1300-01-01' Magnus 1193-12-05
+Paul 0013-06-01
+The WHERE clause follows the FROM clause
+Comparisons are entered in the WHERE clause
+Rows where the comparison is true are displayed
+15
+Selecting Specific Rows continued
+The current syntax of a SQL SELECT statement appears below. Note the addition of
+the WHERE clause. A summary of SQL's comparison operators is also included.
+LANGUAGE, COUNTRY
+SYNTAXSUMMARY
+CLAUSE PARAMETERS EXAMPLE
+SELECT * *
+col list
+FROM table
+WHERE
+OPERATOR MEANING
+=
+<>
+<
+=<
+>
+col oper value
+Equal to
+Not equal to
+Less than
+Less than or equal to
+Greater than
+Greater than or equal to
+JOBS
+AREA > 3000000
+EXAMPLE
+NAME = 'EINSTEIN'
+BDATE <>'1944-05-02'
+POP < 100000
+NAME <='O"Grady
+AREA> 999
+BDATE >='1962-06-19'
+Exercises
+1. Display all columns and rows in the COUNTRIES table. Now show only countries
+whose area is less than 30 square miles. There should be 5 rows in the result.
+2. Show the name and country of everyone in the PERSONS table. Now limit the
+result to people who were born in Canada. The final result table contains 6 rows.
+3. Show the name and birth date of people born after 1964-01-01. There are 9 rows.
+Extra Credit
+4. What is the birth date of the person named O'Toole?
+16
