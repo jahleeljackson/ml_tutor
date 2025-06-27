@@ -1,5 +1,6 @@
 # Machine Learning Tutor 
-<img width="500" alt="Screenshot 2025-06-27 at 11 24 57 AM" src="https://github.com/user-attachments/assets/79769ec4-a191-4a21-a131-f5489f00ceff" />
+
+<img width="500" alt="Screenshot 2025-06-27 at 4 43 58 PM" src="https://github.com/user-attachments/assets/72eac2d9-83b9-4e76-94e8-4f74129e2362" />
 <img width="500" alt="Screenshot 2025-06-27 at 11 37 38 AM" src="https://github.com/user-attachments/assets/87535472-9ff5-480d-b764-7f8743093658" />
 
 
@@ -37,14 +38,13 @@ I longed for an LLM interface that didn't require that I provide specific contex
 - Automated knowledge updates for relevant and up to date information
 
 #### What I Learned
-What didn't I learn with this project. Though this was not my first Python project, this is the first in which I used Docker, the Google Cloud Platform, LangChain, Postgres, FastAPI, APScheduler, and python's virtual environments.
+What didn't I learn with this project. Though this was not my first Python project, this is the first in which I used Docker, LangChain, Postgres, FastAPI, APScheduler, and python's virtual environments.
 
 ### Technology Stack 
 - LangChain
 - HuggingFace
 - FastAPI
 - Docker
-- Google Cloud Platform
 - APScheduler
 - Streamlit
 - PostgreSQL / Psycopg2
